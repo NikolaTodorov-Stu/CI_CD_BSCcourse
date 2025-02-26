@@ -17,7 +17,7 @@ volcanoplot <- volcanoplot + geom_point()
 dds_result$padj[is.na(dds_result$padj)] <- 2
 inter <- dds_result[dds_result$padj <= 0.05,]
 volcanoplot <- volcanoplot + geom_text_repel(data = inter, aes(label = genename), color = "red")
-pdf("test.pdf")
+pdf("Outputs/test.pdf")
 PCAplot + theme_bw() + geom_point()
 volcanoplot + theme_bw() + geom_point()
 dev.off()
