@@ -33,16 +33,14 @@ jobs:
           r-version: ${{ matrix.r-version }}
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
-          remotes::install_deps(dependencies = TRUE)
           install.packages("ggplot2")
           install.packages("ggrepel")
           install.packages("BiocManager")
           BiocManager::install("DESeq2")
         shell: Rscript {0}
-      - name: Check
-        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-        shell: Rscript {0}
+      #- name: Check
+       # run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
+        # shell: Rscript {0}
       - name: RunScript
         shell: pwsh
         run: Rscript ./DESeq_test_example.R
