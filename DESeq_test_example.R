@@ -1,0 +1,23 @@
+library(DESeq2)
+library(ggplot2)
+library(ggrepel)
+ngenes = 5000
+set.seed(681)
+dds1 <- makeExampleDESeqDataSet(betaSD=0.78, n=ngenes)
+ddsrlog <- rlog(blind = TRUE, dds1)
+#dds2 <- makeExampleDESeqDataSet(betaSD=1, n=5000)
+#identical(dds1, dds2)
+PCAplot <- plotPCA(ddsrlog, ntop=0.5*ngenes)
+dds_anal <- DESeq(dds1)
+colData(dds_anal)
+dds_result <- results(dds_anal, contrast = c("condition", "A", "B"))
+dds_result$genename <- row.names(dds_result)
+volcanoplot <- ggplot (data = dds_result, aes(x=log2FoldChange, y=-log10(pvalue)))
+volcanoplot <- volcanoplot + geom_point()
+dds_result$padj[is.na(dds_result$padj)] <- 2
+inter <- dds_result[dds_result$padj <= 0.05,]
+volcanoplot <- volcanoplot + geom_text_repel(data = inter, aes(label = genename), color = "red")
+pdf("test.pdf")
+PCAplot + theme_bw() + geom_point()
+volcanoplot + theme_bw() + geom_point()
+dev.off()
